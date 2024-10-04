@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/akhil/ecommerce-yt/database"
+	"ecommerce-app/database"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,7 +24,7 @@ type SignedDetails struct {
 }
 
 var UserData *mongo.Collection = database.UserData(database.Client, "Users")
-var SECRET_KEY = os.Getenv("SECRET_LOVE")
+var SECRET_KEY = os.Getenv("SECRET_KEY")
 
 func TokenGenerator(email string, firstname string, lastname string, uid string) (signedtoken string, signedrefreshtoken string, err error) {
 	claims := &SignedDetails{

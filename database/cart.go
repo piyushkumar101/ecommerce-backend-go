@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/akhil/ecommerce-yt/models"
+	"ecommerce-app/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -95,6 +95,7 @@ func BuyItemFromCart(ctx context.Context, userCollection *mongo.Collection, user
 		price := user_item["total"]
 		total_price = price.(int32)
 	}
+
 	ordercart.Price = int(total_price)
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	update := bson.D{{Key: "$push", Value: bson.D{primitive.E{Key: "orders", Value: ordercart}}}}
@@ -102,10 +103,12 @@ func BuyItemFromCart(ctx context.Context, userCollection *mongo.Collection, user
 	if err != nil {
 		log.Println(err)
 	}
+
 	err = userCollection.FindOne(ctx, bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&getcartitems)
 	if err != nil {
 		log.Println(err)
 	}
+
 	filter2 := bson.D{primitive.E{Key: "_id", Value: id}}
 	update2 := bson.M{"$push": bson.M{"orders.$[].order_list": bson.M{"$each": getcartitems.UserCart}}}
 	_, err = userCollection.UpdateOne(ctx, filter2, update2)
